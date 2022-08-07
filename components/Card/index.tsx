@@ -1,49 +1,70 @@
 import styled from 'styled-components';
 import Link from 'next/link';
-
-const FlexContainer = styled.div`
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  flex-flow: column wrap;
-  max-width: 800px;
-  margin-top: 3rem;
-`;
-
-const Card = styled.div`
-  padding: 1.5rem;
-  color: inherit;
-  text-decoration: none;
-  border: 1px solid black;
-  border-radius: 10px;
-  transition: color 0.15s ease, border-color 0.15s ease;
-  width: 100%;
-
-  &:hover,
-  :focus,
-  :active {
-    color: #0070f3;
-    border-color: #0070f3;
-  }
-`;
+import Image from 'next/image';
+import { GlassContainer } from '../styles/SharedStyles';
 
 const StyledA = styled.a`
-  margin: 0 0 1rem 0;
-  font-size: 1.5rem;
+  /* margin: auto; */
+  --tw-shadow: 0 20px 25px -5px rgba(0, 0, 0, 0.1),
+    0 10px 10px -5px rgba(0, 0, 0, 0.04);
+  box-shadow: 0 0 transparent, 0 0 #0000, 0 0 transparent, 0 0 #0000,
+    0 0 transparent;
+
+  border-color: ${({ theme }) => theme.colors.white100 };
+  border-radius: 0.75rem /* 12px */;
 `;
 
-const StyledLink = ({ href, name }) => (
+const StyledLink = ({ href, children }) => (
   <Link href={href} passHref>
-    <StyledA>{name}</StyledA>
+    <StyledA>{children}</StyledA>
   </Link>
 );
 
-export default function Cards() {
+const Container = styled(GlassContainer)`
+  border-radius: 0.75rem /* 12px */;
+  padding-top: 0.25rem /* 4px */;
+  padding-bottom: 0.25rem /* 4px */;
+  padding-bottom: 1.25rem /* 20px */;
+  padding-left: 1rem /* 16px */;
+  padding-right: 1rem /* 16px */;
+
+  backdrop-filter: blur(10px);
+`;
+
+const HeaderWrapper = styled.div`
+  margin-top: 0.75rem /* 12px */;
+  margin-bottom: 0.75rem /* 12px */;
+`;
+
+const ImageWrapper = styled.div`
+  color: ${({ theme }) => theme.colors.white100 };
+`;
+
+const Header = styled.div`
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  font-size: 1.25rem /* 20px */;
+  line-height: 1.75rem /* 28px */;
+  font-weight: 800;
+  overflow: hidden;
+  width: 16rem /* 256px */;
+`;
+
+const Imag = styled.img`
+  border-radius: 0.75rem /* 12px */;
+`;
+
+export default function Card({ name, imageUrl, href }) {
   return (
-    <FlexContainer>
-      <Card>
-        <StyledLink href='/about' name='About Page &rarr;' />
-      </Card>
-    </FlexContainer>
+    <StyledLink href={href}>
+      <Container>
+        <HeaderWrapper>
+          <Header>{name}</Header>
+        </HeaderWrapper>
+        <ImageWrapper>
+          <Imag src={imageUrl} alt={name} width={260} height={160} />
+        </ImageWrapper>
+      </Container>
+    </StyledLink>
   );
 }

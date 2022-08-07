@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Banner from '../components/Banner';
-import { Container, Main, HeroImage } from './styles';
+import Card from '../components/Card';
+import { Container, Main, HeroImage, CardLayout } from './styles';
 
 export default function Home() {
 
@@ -17,6 +18,14 @@ export default function Home() {
       <Main>
         <Banner btnText='View stores nearby' handleClick={handleBannerClick} />
         <HeroImage src='/static/hero-image.png' />
+        <CardLayout>
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+          <Card name='Darkhorse coffee' imageUrl='/static/hero-image.png' href='/coffee-store/yolo' />
+        </CardLayout>
       </Main>
     </Container>
   );

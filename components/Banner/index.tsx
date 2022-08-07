@@ -4,18 +4,9 @@ const Container = styled.div`
   margin-bottom: 1rem;
   position: relative;
   z-index: 2;
-  padding-left: 1.5rem /* 16px */;
-  padding-right: 1.5rem /* 16px */;
 
-  @media (${({ theme }) => theme.breakpoints.sm}) {
-    padding-left: 2.5rem /* 24px */;
-    padding-right: 2.5rem /* 24px */;
-  }
   @media (${({ theme }) => theme.breakpoints.lg}) {
     text-align: left;
-    margin-top: 5rem /* 80px */;
-    padding-left: 3rem /* 32px */;
-    padding-right: 3rem /* 32px */;
   }
 `;
 
