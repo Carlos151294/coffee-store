@@ -10,9 +10,7 @@ const GlobalStyle = createGlobalStyle`
       Ubuntu, Cantarell, Fira Sans, Droid Sans, Helvetica Neue, sans-serif;
     background: url("/static/background.png");
 
-    background-position: 50%;
-    background-repeat: no-repeat;
-    background-size: cover;
+    background-size: auto;
     color: #373b64;
     height: 100%;
 

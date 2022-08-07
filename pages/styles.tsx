@@ -1,8 +1,6 @@
 import styled from 'styled-components';
 
 export const Container = styled.div`
-  margin-bottom: 14rem /* 224px */;
-
   padding-left: 1.5rem /* 16px */;
   padding-right: 1.5rem /* 16px */;
 
@@ -35,20 +33,24 @@ export const HeroImage = styled.img`
   position: absolute;
   top: 0;
   width: 100%;
+  max-width: 1200px;
   height: auto;
   z-index: 0;
 `;
 
 export const CardLayout = styled.div`
+  max-width: 1200px;
+  margin: 0 auto;
   display: grid;
-  grid-template-columns: repeat(1, 1fr);
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   justify-items: center;
-  grid-gap: 1.5rem;
+  grid-gap: 2.5rem;
+`;
 
-  @media (${({ theme }) => theme.breakpoints.sm}) {
-    grid-template-columns: repeat(2, 1fr);
-  }
-  @media (${({ theme }) => theme.breakpoints.lg}) {
-    grid-template-columns: repeat(3, 1fr);
-  }
+export const Heading2 = styled.h2`
+  font-size: 2.25rem;
+  line-height: 2.5rem;
+  padding-bottom: 2rem;
+  margin-top: 2rem;
+  color: ${({ theme }) => theme.colors.white100};
 `;

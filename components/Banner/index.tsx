@@ -1,7 +1,7 @@
 import styled from 'styled-components';
 
 const Container = styled.div`
-  margin-bottom: 1rem;
+  margin-bottom: 5rem;
   position: relative;
   z-index: 2;
 
