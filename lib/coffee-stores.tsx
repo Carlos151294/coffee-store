@@ -43,7 +43,7 @@ export const fetchCoffeeStores = async () => {
   };
 
   const url = getCoffeeStoresUrl(
-    '42.35209626080208%2C-71.04599828318548', // Seaport, Boston
+    '42.35209626080208,-71.04599828318548', // Seaport, Boston
     'coffee',
     6
   );

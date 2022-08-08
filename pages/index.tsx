@@ -1,6 +1,7 @@
 import Head from 'next/head';
 import Banner from '../components/Banner';
 import Card from '../components/Card';
+import { useLocation } from '../hooks/use-location';
 import {
   CoffeeStore,
   fetchCoffeeStores,
@@ -20,8 +21,10 @@ export async function getStaticProps() {
 }
 
 export default function Home({ coffeeStores }: HomeProps) {
+  const { handleTrackLocation, coords, loading, errorMsg } = useLocation();
+
   const handleBannerClick = () => {
-    console.log('Banner clicked!');
+    handleTrackLocation();
   };
 
   return (
@@ -31,7 +34,11 @@ export default function Home({ coffeeStores }: HomeProps) {
         <link rel='icon' href='/favicon.ico' />
       </Head>
       <Main>
-        <Banner btnText='View stores nearby' handleClick={handleBannerClick} />
+        <Banner
+          btnText={loading ? 'Locating...' : 'View stores nearby'}
+          handleClick={handleBannerClick}
+        />
+        {errorMsg && `Something went wrong: ${errorMsg}`} 
         <HeroImage src='/static/hero-image.png' />
         {coffeeStores.length > 0 && (
           <>
