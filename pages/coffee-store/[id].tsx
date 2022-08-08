@@ -3,7 +3,11 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import coffeeStoresData from '../../data/coffee-stores.json';
+import {
+  CoffeeStore as CoffeeStoreModel,
+  fetchCoffeeStores,
+  fetchCoffeeStoresMock,
+} from '../../lib/coffee-stores';
 import {
   BackToHomeLink,
   Col1,
@@ -18,19 +22,21 @@ import {
   UpvoteButton,
 } from './styles';
 
-export function getStaticProps(context: GetStaticPropsContext) {
+export async function getStaticProps(context: GetStaticPropsContext) {
+  const coffeeStores = await fetchCoffeeStoresMock();
   return {
     props: {
-      ...coffeeStoresData.find(
-        (store) => store.id.toString() === context.params.id
+      ...coffeeStores.find(
+        (coffeeStore) => coffeeStore.id === context.params.id
       ),
     },
   };
 }
 
-export function getStaticPaths() {
-  const paths = coffeeStoresData.map((coffeeStore) => ({
-    params: { id: coffeeStore.id.toString() },
+export async function getStaticPaths() {
+  const coffeeStores = await fetchCoffeeStoresMock();
+  const paths = coffeeStores.map((coffeeStore) => ({
+    params: { id: coffeeStore.id },
   }));
 
   return {
@@ -39,7 +45,12 @@ export function getStaticPaths() {
   };
 }
 
-export default function CoffeeStore({ name, imgUrl, address, neighbourhood }) {
+export default function CoffeeStore({
+  name,
+  imgUrl,
+  address,
+  neighborhood,
+}: CoffeeStoreModel) {
   const router = useRouter();
 
   if (router.isFallback) {
@@ -68,14 +79,18 @@ export default function CoffeeStore({ name, imgUrl, address, neighbourhood }) {
           <StyledImage src={imgUrl} width={600} height={360} alt={name} />
         </Col1>
         <Col2>
-          <IconWrapper>
-            <Image src='/static/icons/places.svg' width={24} height={24} />
-            <Text>{address}</Text>
-          </IconWrapper>
-          <IconWrapper>
-            <Image src='/static/icons/nearMe.svg' width={24} height={24} />
-            <Text>{neighbourhood}</Text>
-          </IconWrapper>
+          {address && (
+            <IconWrapper>
+              <Image src='/static/icons/places.svg' width={24} height={24} />
+              <Text>{address}</Text>
+            </IconWrapper>
+          )}
+          {neighborhood && (
+            <IconWrapper>
+              <Image src='/static/icons/nearMe.svg' width={24} height={24} />
+              <Text>{neighborhood}</Text>
+            </IconWrapper>
+          )}
           <IconWrapper>
             <Image src='/static/icons/star.svg' width={24} height={24} />
             <Text>1</Text>

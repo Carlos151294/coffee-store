@@ -1,16 +1,25 @@
 import Head from 'next/head';
 import Banner from '../components/Banner';
 import Card from '../components/Card';
+import {
+  CoffeeStore,
+  fetchCoffeeStores,
+  fetchCoffeeStoresMock,
+} from '../lib/coffee-stores';
 import { Container, Main, HeroImage, CardLayout, Heading2 } from './styles';
-import coffeeStoresData from '../data/coffee-stores.json';
+
+type HomeProps = {
+  coffeeStores: CoffeeStore[];
+};
 
 export async function getStaticProps() {
+  const coffeeStores = await fetchCoffeeStoresMock();
   return {
-    props: { coffeeStores: coffeeStoresData }, // will be passed to the page component as props
+    props: { coffeeStores }, // will be passed to the page component as props
   };
 }
 
-export default function Home({ coffeeStores }) {
+export default function Home({ coffeeStores }: HomeProps) {
   const handleBannerClick = () => {
     console.log('Banner clicked!');
   };
@@ -26,7 +35,7 @@ export default function Home({ coffeeStores }) {
         <HeroImage src='/static/hero-image.png' />
         {coffeeStores.length > 0 && (
           <>
-            <Heading2>Toronto stores</Heading2>
+            <Heading2>Boston Coffee Stores</Heading2>
             <CardLayout>
               {coffeeStores.map((coffeeStore) => (
                 <Card
