@@ -1,0 +1,1 @@
+export const BOSTON_LAT_LONG = '42.35209626080208,-71.04599828318548'; // Seaport, Boston

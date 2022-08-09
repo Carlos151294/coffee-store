@@ -1,10 +1,6 @@
 import { createApi } from 'unsplash-js';
 import coffeeStoresData from '../data/coffee-stores.json';
 
-interface SearchResponse {
-  results: CoffeeStore[];
-}
-
 export interface CoffeeStore {
   id: string;
   name: string;
@@ -14,7 +10,7 @@ export interface CoffeeStore {
 }
 
 const unsplash = createApi({
-  accessKey: process.env.UNSPLASH_API_ACCESS_KEY,
+  accessKey: process.env.NEXT_PUBLIC_UNSPLASH_API_ACCESS_KEY,
 });
 
 const getCoffeeStoresImages = async (): Promise<string[]> => {
@@ -31,22 +27,21 @@ const getCoffeeStoresUrl = (latLong: string, query: string, limit: number) => {
   return `https://api.foursquare.com/v3/places/search?query=${query}&ll=${latLong}&limit=${limit}`;
 };
 
-export const fetchCoffeeStores = async () => {
+export const fetchCoffeeStores = async (
+  latLong: string,
+  limit: number = 6
+): Promise<CoffeeStore[]> => {
   const photos = await getCoffeeStoresImages();
 
   const options = {
     method: 'GET',
     headers: {
       Accept: 'application/json',
-      Authorization: process.env.FOURSQUARE_API_KEY,
+      Authorization: process.env.NEXT_PUBLIC_FOURSQUARE_API_KEY,
     },
   };
 
-  const url = getCoffeeStoresUrl(
-    '42.35209626080208,-71.04599828318548', // Seaport, Boston
-    'coffee',
-    6
-  );
+  const url = getCoffeeStoresUrl(latLong, 'coffee', limit);
 
   const response = await fetch(url, options);
   const { results } = await response.json();
@@ -55,19 +50,26 @@ export const fetchCoffeeStores = async () => {
     id: coffeeStore.fsq_id,
     name: coffeeStore.name,
     address: coffeeStore.location.address,
-    neighborhood: coffeeStore.location.neighborhood[0],
+    neighborhood: coffeeStore.location.locality,
     imgUrl: photos[index],
   }));
 };
 
-export const fetchCoffeeStoresMock = async (): Promise<CoffeeStore[]> => {
+export const fetchCoffeeStoresMock = async (
+  nearMe = false
+): Promise<CoffeeStore[]> => {
   const photos = await getCoffeeStoresImages();
 
-  return coffeeStoresData.map((coffeeStore, index: number) => ({
-    id: coffeeStore.fsq_id,
-    name: coffeeStore.name,
-    address: coffeeStore.location.address,
-    neighborhood: coffeeStore.location.neighborhood[0],
-    imgUrl: photos[index],
-  }));
+  const initialCoffeeStores = coffeeStoresData.slice(0, 5);
+  const coffeeStoresNearMe = coffeeStoresData.slice(5);
+
+  return [...(nearMe ? coffeeStoresNearMe : initialCoffeeStores)].map(
+    (coffeeStore, index: number) => ({
+      id: coffeeStore.fsq_id,
+      name: coffeeStore.name,
+      address: coffeeStore.location.address,
+      neighborhood: coffeeStore.location.neighborhood[0],
+      imgUrl: photos[index],
+    })
+  );
 };

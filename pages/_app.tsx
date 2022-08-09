@@ -1,6 +1,7 @@
 import type { AppProps } from 'next/app';
 import { ThemeProvider, DefaultTheme } from 'styled-components';
 import GlobalStyle from '../components/styles/GlobalStyles';
+import StoreProvider from '../store/store-context';
 
 const theme: DefaultTheme = {
   colors: {
@@ -15,19 +16,19 @@ const theme: DefaultTheme = {
   },
   breakpoints: {
     sm: 'min-width: 640px', // small device
-    md:'min-width: 768px', // medium device
+    md: 'min-width: 768px', // medium device
     lg: 'min-width: 1024px', // large device
     xl: 'min-width: 1280px', // extra large device
-  }
+  },
 };
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <>
+    <StoreProvider>
       <ThemeProvider theme={theme}>
         <GlobalStyle />
         <Component {...pageProps} />
       </ThemeProvider>
-    </>
+    </StoreProvider>
   );
 }

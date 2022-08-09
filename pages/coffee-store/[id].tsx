@@ -3,11 +3,14 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
+import { useContext, useEffect, useState } from 'react';
 import {
   CoffeeStore as CoffeeStoreModel,
   fetchCoffeeStores,
-  fetchCoffeeStoresMock,
 } from '../../lib/coffee-stores';
+import { isEmpty } from '../../utils';
+import { BOSTON_LAT_LONG } from '../../utils/constants';
+import { StoreContext } from '../../store/store-context';
 import {
   BackToHomeLink,
   Col1,
@@ -22,19 +25,26 @@ import {
   UpvoteButton,
 } from './styles';
 
+type CoffeeStoreProps = {
+  coffeeStore: CoffeeStoreModel;
+};
+
 export async function getStaticProps(context: GetStaticPropsContext) {
-  const coffeeStores = await fetchCoffeeStoresMock();
+  const coffeeStores = await fetchCoffeeStores(BOSTON_LAT_LONG);
+
+  const coffeeStore =
+    coffeeStores.find((coffeeStore) => coffeeStore.id === context.params.id) ||
+    {};
+  console.log(coffeeStore);
   return {
     props: {
-      ...coffeeStores.find(
-        (coffeeStore) => coffeeStore.id === context.params.id
-      ),
+      coffeeStore,
     },
   };
 }
 
 export async function getStaticPaths() {
-  const coffeeStores = await fetchCoffeeStoresMock();
+  const coffeeStores = await fetchCoffeeStores(BOSTON_LAT_LONG);
   const paths = coffeeStores.map((coffeeStore) => ({
     params: { id: coffeeStore.id },
   }));
@@ -45,17 +55,36 @@ export async function getStaticPaths() {
   };
 }
 
-export default function CoffeeStore({
-  name,
-  imgUrl,
-  address,
-  neighborhood,
-}: CoffeeStoreModel) {
+export default function CoffeeStore(initialProps: CoffeeStoreProps) {
   const router = useRouter();
+  const {
+    state: { coffeeStores },
+  } = useContext(StoreContext);
+  const [coffeeStore, setCoffeeStore] = useState<CoffeeStoreModel>(
+    initialProps.coffeeStore
+  );
 
-  if (router.isFallback) {
+  useEffect(() => {
+    // Coffee store not initialized in getStaticProps
+    if (router.isFallback) return;
+
+    if (isEmpty(coffeeStore) && coffeeStores.length === 0) {
+      alert('Coffee Store does not exist!');
+      router.push('/');
+      return;
+    }
+
+    const foundCoffeeStore = coffeeStores.find(
+      (coffeeStore) => coffeeStore.id === router.query.id
+    );
+    setCoffeeStore(foundCoffeeStore);
+  }, [router.isFallback]);
+
+  if (router.isFallback || isEmpty(coffeeStore)) {
     return <div>Loading</div>;
   }
+
+  const { name, imgUrl, address, neighborhood } = coffeeStore || {};
 
   const handleUpvoteClick = () => {
     console.log('upvote!');
@@ -76,7 +105,9 @@ export default function CoffeeStore({
           <NameWrapper>
             <Name>{name}</Name>
           </NameWrapper>
-          <StyledImage src={imgUrl} width={600} height={360} alt={name} />
+          {imgUrl && (
+            <StyledImage src={imgUrl} width={600} height={360} alt={name} />
+          )}
         </Col1>
         <Col2>
           {address && (

@@ -1,15 +1,7 @@
 [
   {
-    "fsq_id": "0",
-    "name": "StrangeLove Coffee",
-    "location": {
-      "address": "983 Queen St E, Toronto, ON M4M 1K2",
-      "neighborhood": ["at King and Spadina"]
-    }
-  },
-  {
     "fsq_id": "1",
-    "name": "Dark Horse Coffee",
+    "name": "StrangeLove Coffee",
     "location": {
       "address": "401 Richmond St W",
       "neighborhood": ["Richmond and Spadina"]
@@ -25,7 +17,7 @@
   },
   {
     "fsq_id": "3",
-    "name": "Dark Horse Coffee",
+    "name": "Blue Coffee",
     "location": {
       "address": "401 Richmond St W",
       "neighborhood": ["Richmond and Spadina"]
@@ -33,7 +25,7 @@
   },
   {
     "fsq_id": "4",
-    "name": "Dark Horse Coffee",
+    "name": "Café Mozart",
     "location": {
       "address": "401 Richmond St W",
       "neighborhood": ["Richmond and Spadina"]
@@ -41,7 +33,47 @@
   },
   {
     "fsq_id": "5",
-    "name": "Dark Horse Coffee",
+    "name": "Nero Coffee",
+    "location": {
+      "address": "401 Richmond St W",
+      "neighborhood": ["Richmond and Spadina"]
+    }
+  },
+  {
+    "fsq_id": "6",
+    "name": "6 Coffee",
+    "location": {
+      "address": "983 Queen St E, Toronto, ON M4M 1K2",
+      "neighborhood": ["at King and Spadina"]
+    }
+  },
+  {
+    "fsq_id": "7",
+    "name": "7 Coffee",
+    "location": {
+      "address": "401 Richmond St W",
+      "neighborhood": ["Richmond and Spadina"]
+    }
+  },
+  {
+    "fsq_id": "8",
+    "name": "8 Coffee",
+    "location": {
+      "address": "401 Richmond St W",
+      "neighborhood": ["Richmond and Spadina"]
+    }
+  },
+  {
+    "fsq_id": "9",
+    "name": "9 Coffee",
+    "location": {
+      "address": "401 Richmond St W",
+      "neighborhood": ["Richmond and Spadina"]
+    }
+  },
+  {
+    "fsq_id": "10",
+    "name": "10 Coffee",
     "location": {
       "address": "401 Richmond St W",
       "neighborhood": ["Richmond and Spadina"]

@@ -1,4 +1,5 @@
-import { useState } from 'react';
+import { useContext, useState } from 'react';
+import { StoreContext, STORE_ACTION_TYPES } from '../store/store-context';
 
 interface Coords {
   latitude: number;
@@ -10,7 +11,7 @@ interface Position {
 }
 
 export const useLocation = () => {
-  const [coords, setCoords] = useState('');
+  const { dispatch } = useContext(StoreContext);
   const [loading, setLoading] = useState(false);
   const [errorMsg, setErrorMsg] = useState('');
 
@@ -18,8 +19,11 @@ export const useLocation = () => {
     const {
       coords: { latitude, longitude },
     } = position;
-    
-    setCoords(`${latitude},${longitude}`);
+
+    dispatch({
+      type: STORE_ACTION_TYPES.SET_LAT_LONG,
+      payload: `${latitude},${longitude}`,
+    });
     setErrorMsg('');
     setLoading(false);
   };
@@ -27,7 +31,10 @@ export const useLocation = () => {
   const error = (error) => {
     console.log(error.message);
     setErrorMsg(`Unable to retrieve your location`);
-    setCoords('');
+    dispatch({
+      type: STORE_ACTION_TYPES.SET_LAT_LONG,
+      payload: '',
+    });
     setLoading(false);
   };
 
@@ -41,7 +48,6 @@ export const useLocation = () => {
   };
 
   return {
-    coords,
     loading,
     errorMsg,
     handleTrackLocation,
