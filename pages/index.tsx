@@ -39,7 +39,8 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
   const handleFetchCoffeeStores = async () => {
     try {
       setCoffeeStoresError(null);
-      const coffeeStores = await fetchCoffeeStores(latLong, 10);
+      const response = await fetch(`http://localhost:3000/api/coffee-stores?latLong=${latLong}&limit=10`);
+      const coffeeStores = await response.json();
       dispatch({
         type: STORE_ACTION_TYPES.SET_COFFEE_STORES,
         payload: coffeeStores,
