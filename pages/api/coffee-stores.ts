@@ -1,10 +1,6 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
 
-type Data = {
-  name: string;
-};
-
 export default async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { latLong, limit } = req.query;

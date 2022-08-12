@@ -35,7 +35,6 @@ export async function getStaticProps(context: GetStaticPropsContext) {
   const coffeeStore =
     coffeeStores.find((coffeeStore) => coffeeStore.id === context.params.id) ||
     {};
-  console.log(coffeeStore);
   return {
     props: {
       coffeeStore,
@@ -63,24 +62,42 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
   const [coffeeStore, setCoffeeStore] = useState<CoffeeStoreModel>(
     initialProps.coffeeStore
   );
+  const coffeeStoreId = router.query.id;
+
+  const handleCreateCoffeeStore = async (coffeeStore: CoffeeStoreModel) => {
+    try {
+      const response = await fetch('/api/coffee-store', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ ...coffeeStore, voting: 0 }),
+      });
+      const dbCoffeeStore = await response.json();
+      console.log(dbCoffeeStore);
+    } catch (error) {
+      console.error('Error creating coffee store', error);
+    }
+  };
 
   useEffect(() => {
     // Coffee store not initialized in getStaticProps
-    if (router.isFallback) return;
+    if (isEmpty(initialProps.coffeeStore)) {
+      const contextCoffeeStore = coffeeStores.find(
+        (coffeeStore) => coffeeStore.id === router.query.id
+      );
 
-    if (isEmpty(coffeeStore) && coffeeStores.length === 0) {
-      alert('Coffee Store does not exist!');
-      router.push('/');
-      return;
+      if (contextCoffeeStore) {
+        setCoffeeStore(contextCoffeeStore);
+        handleCreateCoffeeStore(contextCoffeeStore);
+      }
+    } else {
+      // SSG
+      handleCreateCoffeeStore(initialProps.coffeeStore);
     }
+  }, [coffeeStoreId, initialProps.coffeeStore]);
 
-    const foundCoffeeStore = coffeeStores.find(
-      (coffeeStore) => coffeeStore.id === router.query.id
-    );
-    setCoffeeStore(foundCoffeeStore);
-  }, [router.isFallback]);
-
-  if (router.isFallback || isEmpty(coffeeStore)) {
+  if (router.isFallback) {
     return <div>Loading</div>;
   }
 

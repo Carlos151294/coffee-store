@@ -7,6 +7,7 @@ export interface CoffeeStore {
   address: string;
   neighborhood: string;
   imgUrl: string;
+  voting: number;
 }
 
 const unsplash = createApi({
@@ -70,6 +71,7 @@ export const fetchCoffeeStoresMock = async (
       address: coffeeStore.location.address,
       neighborhood: coffeeStore.location.neighborhood[0],
       imgUrl: photos[index],
+      voting: 0,
     })
   );
 };
