@@ -64,7 +64,7 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
   );
   const coffeeStoreId = router.query.id;
 
-  const handleCreateCoffeeStore = async (coffeeStore: CoffeeStoreModel) => {
+  const createCoffeeStore = async (coffeeStore: CoffeeStoreModel) => {
     try {
       const response = await fetch('/api/coffee-store', {
         method: 'POST',
@@ -80,6 +80,18 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
     }
   };
 
+  const fetchAirtableCoffeStore = async () => {
+    if (!coffeeStoreId) return;
+
+    const response = await fetch(`/api/coffee-store?id=${coffeeStoreId}`);
+    const dbCoffeeStores = await response.json();
+
+    if (dbCoffeeStores?.length) {
+      const [dbCoffeeStore] = dbCoffeeStores;
+      setCoffeeStore(dbCoffeeStore);
+    }
+  };
+
   useEffect(() => {
     // Coffee store not initialized in getStaticProps
     if (isEmpty(initialProps.coffeeStore)) {
@@ -89,11 +101,14 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
 
       if (contextCoffeeStore) {
         setCoffeeStore(contextCoffeeStore);
-        handleCreateCoffeeStore(contextCoffeeStore);
+        createCoffeeStore(contextCoffeeStore);
+      } else {
+        // Fetch Coffee Store from Airtable
+        fetchAirtableCoffeStore();
       }
     } else {
       // SSG
-      handleCreateCoffeeStore(initialProps.coffeeStore);
+      createCoffeeStore(initialProps.coffeeStore);
     }
   }, [coffeeStoreId, initialProps.coffeeStore]);
 

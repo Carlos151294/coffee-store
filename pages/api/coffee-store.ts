@@ -35,6 +35,22 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       }
       break;
     default:
+      try {
+        const { id } = req.query;
+        const coffeeStoreRecords = await table
+          .select({
+            filterByFormula: `id="${id}"`,
+          })
+          .firstPage();
+
+        if (coffeeStoreRecords.length > 0) {
+          res.json(mapRecords(coffeeStoreRecords));
+        } else {
+          res.status(500).json({ message: 'Error finding coffee store' });
+        }
+      } catch (error) {
+        res.status(500).json({ message: 'Error finding coffee store', error });
+      }
       break;
   }
 };
