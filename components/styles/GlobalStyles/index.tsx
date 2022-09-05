@@ -20,6 +20,7 @@ const GlobalStyle = createGlobalStyle`
       font-style: normal;
       font-weight: 500;
       src: url(/fonts/IBMPlexSans-Regular.ttf) format('truetype');
+      font-display: swap;
     }
     
     @font-face {
@@ -27,6 +28,7 @@ const GlobalStyle = createGlobalStyle`
       font-style: normal;
       font-weight: 600;
       src: url(/fonts/IBMPlexSans-SemiBold.ttf) format('truetype');
+      font-display: swap;
     }
     
     @font-face {
@@ -34,6 +36,7 @@ const GlobalStyle = createGlobalStyle`
       font-style: normal;
       font-weight: 700;
       src: url(/fonts/IBMPlexSans-Bold.ttf) format('truetype');
+      font-display: swap;
     }
   }
 

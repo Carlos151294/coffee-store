@@ -160,6 +160,10 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
     <Layout>
       <Head>
         <title>{name}</title>
+        <meta
+          name='coffee stores home page'
+          content={`${name} coffee store`}
+        ></meta>
       </Head>
       <Container>
         <Col1>

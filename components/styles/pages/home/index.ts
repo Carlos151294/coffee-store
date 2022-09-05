@@ -1,3 +1,4 @@
+import Image from 'next/image';
 import styled from 'styled-components';
 
 export const Container = styled.div`
@@ -29,7 +30,7 @@ export const Main = styled.div`
   }
 `;
 
-export const HeroImage = styled.img`
+export const HeroImage = styled(Image)`
   position: absolute;
   top: 0;
   width: 100%;

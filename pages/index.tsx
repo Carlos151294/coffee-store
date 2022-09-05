@@ -5,7 +5,13 @@ import Card from '../components/Card';
 import { useLocation } from '../hooks/use-location';
 import { CoffeeStore, fetchCoffeeStores } from '../lib/coffee-stores';
 import { BOSTON_LAT_LONG } from '../utils/constants';
-import { Container, Main, HeroImage, CardLayout, Heading2 } from '../components/styles/pages/home';
+import {
+  Container,
+  Main,
+  HeroImage,
+  CardLayout,
+  Heading2,
+} from '../components/styles/pages/home';
 import { StoreContext, STORE_ACTION_TYPES } from '../store/store-context';
 
 type HomeProps = {
@@ -39,7 +45,9 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
   const handleFetchCoffeeStores = useCallback(async () => {
     try {
       setCoffeeStoresError(null);
-      const response = await fetch(`/api/coffee-stores?latLong=${latLong}&limit=10`);
+      const response = await fetch(
+        `/api/coffee-stores?latLong=${latLong}&limit=10`
+      );
       const coffeeStores = await response.json();
       dispatch({
         type: STORE_ACTION_TYPES.SET_COFFEE_STORES,
@@ -62,6 +70,10 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
       <Head>
         <title>Coffee Connoisseur</title>
         <link rel='icon' href='/favicon.ico' />
+        <meta
+          name='coffee stores'
+          content='Allows you to discover coffee stores'
+        ></meta>
       </Head>
       <Main>
         <Banner
@@ -70,7 +82,7 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
         />
         {locationError && `Something went wrong: ${locationError}`}
         {coffeeStoresError && `Something went wrong: ${coffeeStoresError}`}
-        <HeroImage src='/static/hero-image.png' />
+        <HeroImage src='/static/hero-image.png' alt='Hero Image' />
 
         {coffeeStores.length > 0 && (
           <>

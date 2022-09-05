@@ -50,7 +50,7 @@ const Header = styled.div`
   width: 16rem /* 256px */;
 `;
 
-const Imag = styled.img`
+const StyledImage = styled(Image)`
   border-radius: 0.75rem /* 12px */;
 `;
 
@@ -62,7 +62,7 @@ export default function Card({ name, imageUrl, href }) {
           <Header>{name}</Header>
         </HeaderWrapper>
         <ImageWrapper>
-          <Imag src={imageUrl} alt={name} width={260} height={160} />
+          <StyledImage src={imageUrl} alt={name} width={260} height={160} />
         </ImageWrapper>
       </Container>
     </StyledLink>
