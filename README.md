@@ -1,29 +1,23 @@
 # Coffee Store
+
 This app allows you to look for a coffee store nearby. Check it out!
 
 #### Technology Stack
-* **HTML**
 
-* **Styled components**
+- **HTML**
 
-* **JavaScript**
+- **Styled components**
 
-* **TypeScript**
+- **JavaScript**
 
-* **ReactJS**
+- **TypeScript**
 
-* **NextJS**
+- **ReactJS**
 
-* **Airtable**
+- **NextJS**
 
-* **Serverless**
+- **Airtable**
 
-* **Vercel**
+- **Serverless**
 
-* **Netlify**
-
-* **Magic**
-
-* **Hasura**
-
-* **GraphQL**
+- **Netlify**

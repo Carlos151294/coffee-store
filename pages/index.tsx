@@ -1,11 +1,11 @@
 import Head from 'next/head';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
 import Banner from '../components/Banner';
 import Card from '../components/Card';
 import { useLocation } from '../hooks/use-location';
 import { CoffeeStore, fetchCoffeeStores } from '../lib/coffee-stores';
 import { BOSTON_LAT_LONG } from '../utils/constants';
-import { Container, Main, HeroImage, CardLayout, Heading2 } from './styles';
+import { Container, Main, HeroImage, CardLayout, Heading2 } from '../components/styles/pages/home';
 import { StoreContext, STORE_ACTION_TYPES } from '../store/store-context';
 
 type HomeProps = {
@@ -36,10 +36,10 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
     handleTrackLocation();
   };
 
-  const handleFetchCoffeeStores = async () => {
+  const handleFetchCoffeeStores = useCallback(async () => {
     try {
       setCoffeeStoresError(null);
-      const response = await fetch(`http://localhost:3000/api/coffee-stores?latLong=${latLong}&limit=10`);
+      const response = await fetch(`/api/coffee-stores?latLong=${latLong}&limit=10`);
       const coffeeStores = await response.json();
       dispatch({
         type: STORE_ACTION_TYPES.SET_COFFEE_STORES,
@@ -49,13 +49,13 @@ export default function Home({ coffeeStores: initialCoffeeStores }: HomeProps) {
       console.log(error);
       setCoffeeStoresError(error.messsage);
     }
-  };
+  }, [dispatch, latLong]);
 
   useEffect(() => {
     if (!latLong) return;
 
     handleFetchCoffeeStores();
-  }, [latLong]);
+  }, [latLong, handleFetchCoffeeStores]);
 
   return (
     <Container>

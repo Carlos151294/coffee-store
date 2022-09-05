@@ -3,7 +3,8 @@ import Head from 'next/head';
 import Image from 'next/image';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { useContext, useEffect, useState } from 'react';
+import { useCallback, useContext, useEffect, useState } from 'react';
+import useSWR from 'swr';
 import {
   CoffeeStore as CoffeeStoreModel,
   fetchCoffeeStores,
@@ -23,7 +24,7 @@ import {
   StyledImage,
   Text,
   UpvoteButton,
-} from './styles';
+} from '../../components/styles/pages/coffee-store';
 
 type CoffeeStoreProps = {
   coffeeStore: CoffeeStoreModel;
@@ -54,6 +55,8 @@ export async function getStaticPaths() {
   };
 }
 
+export const fetcher = (url) => fetch(url).then((res) => res.json());
+
 export default function CoffeeStore(initialProps: CoffeeStoreProps) {
   const router = useRouter();
   const {
@@ -63,6 +66,11 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
     initialProps.coffeeStore
   );
   const coffeeStoreId = router.query.id;
+  const [votingCount, setVotingCount] = useState(0);
+  const { data, error } = useSWR(
+    `/api/getCoffeeStoreById?id=${coffeeStoreId}`,
+    fetcher
+  );
 
   const createCoffeeStore = async (coffeeStore: CoffeeStoreModel) => {
     try {
@@ -73,14 +81,29 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
         },
         body: JSON.stringify({ ...coffeeStore, voting: 0 }),
       });
-      const dbCoffeeStore = await response.json();
-      console.log(dbCoffeeStore);
+      await response.json();
     } catch (error) {
       console.error('Error creating coffee store', error);
     }
   };
 
-  const fetchAirtableCoffeStore = async () => {
+  const handleUpdateVoting = async () => {
+    try {
+      const response = await fetch(
+        `/api/favoriteCoffeeStoreById?id=${coffeeStoreId}`,
+        {
+          method: 'PUT',
+        }
+      );
+      await response.json();
+      const count = votingCount + 1;
+      setVotingCount(count);
+    } catch (error) {
+      console.error('Error updating voting from coffee store', error);
+    }
+  };
+
+  const fetchAirtableCoffeStore = useCallback(async () => {
     if (!coffeeStoreId) return;
 
     const response = await fetch(`/api/coffee-store?id=${coffeeStoreId}`);
@@ -90,13 +113,13 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
       const [dbCoffeeStore] = dbCoffeeStores;
       setCoffeeStore(dbCoffeeStore);
     }
-  };
+  }, [coffeeStoreId]);
 
   useEffect(() => {
     // Coffee store not initialized in getStaticProps
     if (isEmpty(initialProps.coffeeStore)) {
       const contextCoffeeStore = coffeeStores.find(
-        (coffeeStore) => coffeeStore.id === router.query.id
+        (coffeeStore) => coffeeStore.id === coffeeStoreId
       );
 
       if (contextCoffeeStore) {
@@ -110,7 +133,18 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
       // SSG
       createCoffeeStore(initialProps.coffeeStore);
     }
-  }, [coffeeStoreId, initialProps.coffeeStore]);
+  }, [
+    coffeeStoreId,
+    initialProps.coffeeStore,
+    coffeeStores,
+    fetchAirtableCoffeStore,
+  ]);
+
+  useEffect(() => {
+    if (data?.voting) {
+      setVotingCount(data.voting);
+    }
+  }, [data]);
 
   if (router.isFallback) {
     return <div>Loading</div>;
@@ -118,9 +152,9 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
 
   const { name, imgUrl, address, neighborhood } = coffeeStore || {};
 
-  const handleUpvoteClick = () => {
-    console.log('upvote!');
-  };
+  if (error) {
+    return <div>Something went wrong retrieving coffee store page</div>;
+  }
 
   return (
     <Layout>
@@ -144,21 +178,36 @@ export default function CoffeeStore(initialProps: CoffeeStoreProps) {
         <Col2>
           {address && (
             <IconWrapper>
-              <Image src='/static/icons/places.svg' width={24} height={24} />
+              <Image
+                src='/static/icons/places.svg'
+                alt='Address icon'
+                width={24}
+                height={24}
+              />
               <Text>{address}</Text>
             </IconWrapper>
           )}
           {neighborhood && (
             <IconWrapper>
-              <Image src='/static/icons/nearMe.svg' width={24} height={24} />
+              <Image
+                src='/static/icons/nearMe.svg'
+                alt='Neighborhood icon'
+                width={24}
+                height={24}
+              />
               <Text>{neighborhood}</Text>
             </IconWrapper>
           )}
           <IconWrapper>
-            <Image src='/static/icons/star.svg' width={24} height={24} />
-            <Text>1</Text>
+            <Image
+              src='/static/icons/star.svg'
+              alt='Voting icon'
+              width={24}
+              height={24}
+            />
+            <Text>{votingCount}</Text>
           </IconWrapper>
-          <UpvoteButton onClick={handleUpvoteClick}>Up vote!</UpvoteButton>
+          <UpvoteButton onClick={handleUpdateVoting}>Up vote!</UpvoteButton>
         </Col2>
       </Container>
     </Layout>

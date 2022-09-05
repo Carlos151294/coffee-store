@@ -1,7 +1,6 @@
 import Image from 'next/image';
-import Link from 'next/link';
 import styled from 'styled-components';
-import { GlassContainer } from '../../components/styles/SharedStyles';
+import { GlassContainer } from '../../SharedStyles';
 
 export const BackToHomeLink = styled.div`
   margin-top: 6rem /* 96px */;

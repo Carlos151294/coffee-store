@@ -1,7 +1,7 @@
 import { NextApiRequest, NextApiResponse } from 'next';
-import { mapRecords, table } from '../../lib/airtable';
+import { findRecord, mapRecords, table } from '../../lib/airtable';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const CoffeeStore = async (req: NextApiRequest, res: NextApiResponse) => {
   const newRecord = req.body;
 
   switch (req.method) {
@@ -13,14 +13,10 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
         }
 
         // Find record
-        const coffeeStoreRecords = await table
-          .select({
-            filterByFormula: `id="${newRecord.id}"`,
-          })
-          .firstPage();
+        const coffeeStoreRecords = await findRecord(newRecord.id);
 
         if (coffeeStoreRecords.length > 0) {
-          res.json(mapRecords(coffeeStoreRecords));
+          res.json(coffeeStoreRecords);
         } else {
           // Create record
           const records = await table.create([
@@ -54,3 +50,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
       break;
   }
 };
+
+export default CoffeeStore;

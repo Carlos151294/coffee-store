@@ -1,7 +1,7 @@
 import type { NextApiRequest, NextApiResponse } from 'next';
 import { fetchCoffeeStores } from '../../lib/coffee-stores';
 
-export default async (req: NextApiRequest, res: NextApiResponse) => {
+const CoffeeStores = async (req: NextApiRequest, res: NextApiResponse) => {
   try {
     const { latLong, limit } = req.query;
 
@@ -22,3 +22,5 @@ export default async (req: NextApiRequest, res: NextApiResponse) => {
     res.status(500).json({ message: 'Something went wrong' });
   }
 };
+
+export default CoffeeStores;
